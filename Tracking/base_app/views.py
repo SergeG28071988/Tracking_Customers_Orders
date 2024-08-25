@@ -134,3 +134,16 @@ def print_clients(request):
 # Функции для работы с заказами
 def order_list(request):
     return render(request, 'order_list.html')
+
+def display_orders(request):
+    orders = Order.objects.all()
+
+    context = {
+        'orders': orders,
+        'header': 'Заказы'
+    }
+
+    return render(request, 'order_list.html', context)
+
+def add_order(request): return None
+def print_orders(request): return None
