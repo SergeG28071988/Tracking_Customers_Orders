@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title  %}  Клиенты {% endblock  %}
+
+{% block content %}
+<br>
+<div class="header-bar">
+    <div>
+        <br>
+        <h1>Hello {{ request.user|title }}</h1>        
+    </div>
+    {% if request.user.is_authenticated %}
+    <a href="{% url 'logout' %}">Logout</a>
+    {% else %}
+    <a href="{% url 'login' %}">Login</a>
+    {% endif %}
+</div>
+
+<br> 
+<div class="button-group">
+    <a href="{% url 'display_clients' %}" class="btn btn-primary btn-end" role="button">Клиенты</a>
+    <a href="{% url 'add_client' %}" class="btn btn-warning btn-sm" role="button"> +</a>
+    
+</div>
+
+<br>
+<h4>Currently, Viewing {{ header }}</h4>
+
+<br>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>ИД</th>
+            <th>Клиент</th>
+            <th>Электронная почта</th>
+            <th>Телефон</th>
+            <th>Показать фото</th>
+            <th></th>            
+            <th>Детали</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for client in clients %}
+            <tr>
+                <td>{{ client.pk }}</td>
+                <td>{{ client.name }}</td>
+                <td>{{ client.email }}</td>
+                <td>{{ client.phone }}</td>
+                
+                <td>
+                    <img src="{{ client.photo.url }}" alt="connect"
+                                 style="max-height:100px">
+                </td>
+                <td>
+                    <a href="{{ client.photo.url}}"
+                       class="btn btn-primary"
+                       target="_blank"> Показать</a>
+                </td>
+                <td>
+                    <a href="{% url 'client_detail' client.pk %}" class="btn btn-warning btn-sm" role="button"> Детали</a>
+                </td>
+            </tr>
+        {% endfor %}        
+    </tbody>
+</table>
+
+{% endblock content %}

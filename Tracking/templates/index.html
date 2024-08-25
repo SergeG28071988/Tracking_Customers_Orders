@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Главная страница сайта
+{% endblock %}
+
+{% block content %}
+
+<br>
+
+<div class="header-bar">
+    <div>
+        <br>
+        <h1>Hello {{ request.user|title }}</h1>        
+    </div>
+    {% if request.user.is_authenticated %}
+    <a href="{% url 'logout' %}">Logout</a>
+    {% else %}
+    <a href="{% url 'login' %}">Login</a>
+    {% endif %}
+</div>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">                  
+            <img src="https://overclockers.ru/st/legacy/blog/378660/482614_O.png" class="img-fluid resized-image" alt="Компьютерный магазин">
+        </div>
+    </div>
+</div>
+{% endblock %}
+
