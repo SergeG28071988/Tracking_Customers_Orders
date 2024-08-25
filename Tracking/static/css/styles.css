@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
+
+body {
+
+    margin-top: 10px;
+    padding-top: 20px;
+
+    font-family: 'Roboto', sans-serif;
+
+    background-image: url("https://catherineasquithgallery.com/uploads/posts/2021-02/1613216242_171-p-foni-sinie-abstraktnie-219.jpg");
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: black;
+}
+
+html {
+       height: 100%;
+ }
+
+
