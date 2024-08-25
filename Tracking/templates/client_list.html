@@ -20,12 +20,19 @@
 <div class="button-group">
     <a href="{% url 'display_clients' %}" class="btn btn-primary btn-end" role="button">Клиенты</a>
     <a href="{% url 'add_client' %}" class="btn btn-warning btn-sm" role="button"> +</a>
-    
+    <a href="{% url 'print_clients' %}" class="btn btn-info btn-sm" onclick="window.print();">Печать</a>
 </div>
 
 <br>
 <h4>Currently, Viewing {{ header }}</h4>
-
+<!-- Форма поиска по наименованию клиента -->
+<form action="{% url 'search_clients' %}" method="GET">
+    <input type="text" name="name" placeholder="Search by name">
+    <div class="button-container">
+        <button type="submit" class="btn btn-primary" name="button">Поиск клиентов</button>
+        <a href="{% url 'display_clients' %}" class="btn btn-secondary" role="button">Перезагрузка</a>
+    </div>
+</form>
 <br>
 <table class="table table-hover">
     <thead>

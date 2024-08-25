@@ -94,6 +94,42 @@ def client_detail(request, pk):
 
     return render(request, 'client_detail.html', context)
 
+def edit_client(request, pk):
+    client = get_object_or_404(Client, pk=pk)
+
+    if request.method == "POST":
+        form = ClientForm(request.POST, request.FILES, instance=client)
+        if form.is_valid():
+            form.save()
+            return redirect("client_list")
+
+    else:
+        form = ClientForm(instance=client)
+        context = {
+            'form': form,
+            'header': 'Редактировать клиента',
+        }
+
+        return render(request, 'edit_client.html', context)
+    
+def delete_client(request, pk):
+    clients = get_object_or_404(Client, pk=pk)
+    clients.delete()
+    return redirect("client_list")
+
+def search_clients(request):
+    name = request.GET.get('name')
+    clients = Client.objects.filter(name__icontains=name)
+    header = f"Найден клиент '{name}'"
+    context = {
+        'clients': clients,
+        'header': header
+    }
+    return render(request, 'client_list.html', context)
+
+def print_clients(request):
+    clients = Client.objects.all()
+    return render(request, 'client_list.html', {'clients': clients})
 
 # Функции для работы с заказами
 def order_list(request):
