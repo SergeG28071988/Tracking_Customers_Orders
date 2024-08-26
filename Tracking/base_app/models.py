@@ -66,4 +66,4 @@ class Order(models.Model):
 @receiver(pre_save, sender=Order)
 def update_completion_date(sender, instance, **kwargs):
     if instance.completed and not instance.completion_date:
-        instance.completion_date = instance.date_created
+        instance.completion_date = instance.date_created        

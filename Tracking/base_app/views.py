@@ -132,18 +132,107 @@ def print_clients(request):
     return render(request, 'client_list.html', {'clients': clients})
 
 # Функции для работы с заказами
+def plot_order_statistics(orders):
+    fig, ax = plt.subplots()
+
+    order_date = [order.order_date for order in orders]
+    order_amounts = [order.order_amount for order in orders]
+
+    ax.bar(order_date, order_amounts, color='skyblue')
+    plt.xlabel('Дата заказа')
+    plt.ylabel('Сумма заказа')
+    plt.title('Статистика заказов')
+    plt.xticks(rotation=45)
+
+    graph_file = BytesIO()
+    plt.savefig(graph_file, format='png')
+    graph_file.seek(0)
+
+    graph_base64 = base64.b64encode(graph_file.read()).decode()
+
+    plt.close('all')
+
+    return graph_base64
+
 def order_list(request):
     return render(request, 'order_list.html')
 
 def display_orders(request):
     orders = Order.objects.all()
+    graph_base64 = plot_order_statistics(orders)
 
     context = {
         'orders': orders,
+        'graph_base64': graph_base64,
         'header': 'Заказы'
     }
-
     return render(request, 'order_list.html', context)
 
-def add_order(request): return None
-def print_orders(request): return None
+def add_order(request): 
+    if request.method == 'POST':
+        form = OrderForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            form.save()
+            return redirect('order_list')
+    else:
+        form = OrderForm()
+        context = {
+            'form': form,
+            'header': 'Добавить заказ '
+        }
+        return render(request, 'add_order.html', context)
+
+def order_detail(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+
+    context = {
+        'order': order,
+    }
+
+    return render(request, 'order_detail.html', context)
+
+def edit_order(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+
+    if request.method == "POST":
+        form = OrderForm(request.POST, request.FILES, instance=order)
+        if form.is_valid():
+            form.save()
+            return redirect("order_list")
+
+    else:
+        form = OrderForm(instance=order)
+        context = {
+            'form': form,
+            'header': 'Редактировать заказ',
+        }
+
+        return render(request, 'edit_order.html', context)
+    
+def delete_order(request, pk):
+    orders = get_object_or_404(Order, pk=pk)
+    orders.delete()
+    return redirect("order_list")    
+
+def search_orders(request):
+    client = request.GET.get('client')
+    if client:
+        orders = Order.objects.filter(client__name__icontains=client)
+        header = f"Search results for '{client}'"
+    else:
+        orders = Order.objects.all()
+        header = "All Orders"
+
+    graph_base64 = plot_order_statistics(orders)
+
+    context = {
+        'orders': orders,
+        'header': header,
+        'graph_base64': graph_base64,
+    }
+    return render(request, 'order_list.html', context)
+
+def print_orders(request): 
+    orders = Order.objects.all()
+    return render(request, 'order_list.html', {'orders': orders})

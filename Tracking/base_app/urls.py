@@ -24,7 +24,11 @@ urlpatterns = [
     
     # Маршруты для работы с заказами
     path('order_list/', views.order_list, name='order_list'), # список заказов    
-    path('display_orders/', views.display_orders, name='display_orders'), # вывод клиентов
+    path('display_orders/', views.display_orders, name='display_orders'), # вывод заказов
     path('add_order/', views.add_order, name='add_order'), # добавление заказов
-    path('print_orders/', views.print_orders, name='print_orders'), # печать списка клиентов
+    path('order/<int:pk>/', views.order_detail, name='order_detail'), # информация о заказе
+    path('edit_order/<int:pk>/', views.edit_order, name='edit_order'), # редактирование заказа
+    path('delete_order/<int:pk>/', views.delete_order, name='delete_order'), # удаление клиента
+    path('search_orders/', views.search_orders, name='search_orders'), # поиск заказов по клиенту
+    path('print_orders/', views.print_orders, name='print_orders'), # печать списка заказов
 ]

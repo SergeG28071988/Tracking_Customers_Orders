@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %} Добавить заказ  {% endblock %}
+
+{% block content %}
+<br>
+<h4> Добавить заказ </h4>
+<div class="container">
+    <form  method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {%  for field in form  %}
+        <div class="form group">
+            <label for="id_{{ field.order_number }}" class="col-2 col-form-label">{{ field.label }}</label>
+            <div class="col-10">
+                {{ field }}
+            </div>
+        </div>
+        {%  endfor %}
+
+        <div class="button-container">
+            <button type="submit" class="btn btn-primary" name="button">Добавить</button>
+            <a href="{% url 'order_list' %}" class="btn btn-secondary">Назад </a>
+        </div>
+      <br>
+    </form>
+</div>
+{% endblock %}

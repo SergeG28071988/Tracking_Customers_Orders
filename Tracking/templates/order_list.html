@@ -23,12 +23,73 @@
 <br>
 <div class="button-group">
     <a href="{% url 'display_orders' %}" class="btn btn-primary btn-end" role="button">Заказы</a>
+    <a href="{% url 'display_clients' %}" class="btn btn-warning" role="button">К клиентам</a>
     <a href="{% url 'add_order' %}" class="btn btn-warning btn-sm" role="button"> +</a>
     <a href="{% url 'print_orders' %}" class="btn btn-info btn-sm" onclick="window.print();">Печать</a>
 </div>
 
 <br>
 <h4>Currently, Viewing {{ header }}</h4>
-
+<!-- Форма поиска заказа по наименованию товара -->
+<form action="{% url 'search_orders' %}" method="GET">
+    <input type="text" name="client" placeholder="Search by client">
+    <div class="button-container">
+        <button type="submit" class="btn btn-primary" name="button">Поиск заказов</button>
+        <a href="{% url 'display_orders' %}" class="btn btn-secondary" role="button">Перезагрузка</a>        
+    </div>
+</form><br>
+<br>
+{% if orders %}
+    <table class="table table-dark table-hover table-striped table-bordered text-start">
+            <thead>
+                <tr>
+                    <th>ИД</th>
+                    <th>Номер заказа</th>
+                    <th>Клиент</th>
+                    <th>Товар</th>
+                    <th>Категория</th>
+                    <th>Фото</th>                                                           
+                    <th>Дата заказа</th>
+                    <th>Сумма заказа</th>
+                    <th>Статус</th>
+                    <th>Отметка о выполнении</th>
+                    <th>Дата выполнения</th>    
+                    <th>Детали</th>                
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>{{ order.pk }}</td>
+                        <td>{{ order.order_number }}</td>
+                        <td>{{ order.client.name }}</td>
+                        <td>{{ order.product }}</td>
+                        <td>{{ order.category }}</td>
+                        <td>
+                            {% if order.photo %}
+                                <img src="{{ order.photo.url }}" alt="connect" style="max-height:100px">
+                                <a href="{{ order.photo.url }}" class="btn btn-primary" target="_blank">Показать</a>
+                            {% else %}
+                                Фото отсутствует
+                            {% endif %}
+                        </td>
+                        <td>{{ order.order_date }}</td>
+                        <td>{{ order.order_amount }}</td>
+                        <td>{{ order.status }}</td>
+                        <td>{{ order.completed }}</td>
+                        <td>{{ order.completion_date }}</td>                        
+                        <td>
+                            <a href="{% url 'order_detail' order.pk %}" class="btn btn-warning btn-sm" role="button"> Детали</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+      <p>В базе данных нет заказов </p>
+    {% endif %}
+    {% if graph_base64 %}
+        <img src="data:image/png;base64,{{ graph_base64 }}" alt="Orders Statistics">
+    {% endif %}
 
 {% endblock content %}
