@@ -4,10 +4,24 @@
 
 {% block content %}
 <br>
-<h4> Добавить заказ </h4>
+
+<div class="header-bar">
+    <div>
+        <br>
+        <h1>Hello {{ request.user|title }}</h1>        
+    </div>
+    {% if request.user.is_authenticated %}
+    <a href="{% url 'logout' %}">Logout</a>
+    {% else %}
+    <a href="{% url 'login' %}">Login</a>
+    {% endif %}
+</div>
+
+<br><br>
+<h4> {{ header }}</h4>
 <div class="container">
-    <form  method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
+    <form method="POST">
+        {% csrf_token %} 
 
         {%  for field in form  %}
         <div class="form group">
@@ -21,8 +35,7 @@
         <div class="button-container">
             <button type="submit" class="btn btn-primary" name="button">Добавить</button>
             <a href="{% url 'order_list' %}" class="btn btn-secondary">Назад </a>
-        </div>
-      <br>
+        </div>        
     </form>
 </div>
 {% endblock %}
